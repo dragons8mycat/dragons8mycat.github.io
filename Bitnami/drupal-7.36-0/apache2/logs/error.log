@@ -1,0 +1,33 @@
+[Mon May 11 10:28:46.425455 2015] [ssl:warn] [pid 4280:tid 524] AH01909: localhost:443:0 server certificate does NOT include an ID which matches the server name
+[Mon May 11 10:28:46.823624 2015] [ssl:warn] [pid 4280:tid 524] AH01909: localhost:443:0 server certificate does NOT include an ID which matches the server name
+[Mon May 11 10:28:46.915509 2015] [mpm_winnt:notice] [pid 4280:tid 524] AH00455: Apache/2.4.12 (Win32) OpenSSL/1.0.1l PHP/5.4.0 configured -- resuming normal operations
+[Mon May 11 10:28:46.915509 2015] [mpm_winnt:notice] [pid 4280:tid 524] AH00456: Apache Lounge VC9 Server built: Jan 30 2015 11:29:54
+[Mon May 11 10:28:46.915509 2015] [core:notice] [pid 4280:tid 524] AH00094: Command line: 'C:\\Bitnami\\DRUPAL~1.36-\\apache2\\bin\\httpd.exe -d C:/Bitnami/drupal-7.36-0/apache2 -f C:\\Bitnami\\DRUPAL~1.36-\\apache2\\conf\\httpd.conf'
+[Mon May 11 10:28:46.946137 2015] [mpm_winnt:notice] [pid 4280:tid 524] AH00418: Parent: Created child process 5320
+[Mon May 11 10:28:47.773104 2015] [ssl:warn] [pid 5320:tid 428] AH01909: localhost:443:0 server certificate does NOT include an ID which matches the server name
+[Mon May 11 10:28:48.217216 2015] [ssl:warn] [pid 5320:tid 428] AH01909: localhost:443:0 server certificate does NOT include an ID which matches the server name
+[Mon May 11 10:28:48.263159 2015] [mpm_winnt:notice] [pid 5320:tid 428] AH00354: Child: Starting 64 worker threads.
+[Mon May 11 10:28:56.621640 2015] [mpm_winnt:notice] [pid 4280:tid 524] AH00422: Parent: Received shutdown signal -- Shutting down the server.
+[Mon May 11 10:28:58.777876 2015] [mpm_winnt:notice] [pid 5320:tid 428] AH00364: Child: All worker threads have exited.
+[Mon May 11 10:28:58.794722 2015] [mpm_winnt:notice] [pid 4280:tid 524] AH00430: Parent: Child process 5320 exited successfully.
+[Mon May 11 10:29:00.020303 2015] [ssl:warn] [pid 7028:tid 524] AH01909: localhost:443:0 server certificate does NOT include an ID which matches the server name
+[Mon May 11 10:29:00.504678 2015] [ssl:warn] [pid 7028:tid 524] AH01909: localhost:443:0 server certificate does NOT include an ID which matches the server name
+[Mon May 11 10:29:00.535928 2015] [mpm_winnt:notice] [pid 7028:tid 524] AH00455: Apache/2.4.12 (Win32) OpenSSL/1.0.1l PHP/5.4.0 configured -- resuming normal operations
+[Mon May 11 10:29:00.535928 2015] [mpm_winnt:notice] [pid 7028:tid 524] AH00456: Apache Lounge VC9 Server built: Jan 30 2015 11:29:54
+[Mon May 11 10:29:00.535928 2015] [core:notice] [pid 7028:tid 524] AH00094: Command line: 'C:\\Bitnami\\DRUPAL~1.36-\\apache2\\bin\\httpd.exe -d C:/Bitnami/drupal-7.36-0/apache2 -f C:\\Bitnami\\DRUPAL~1.36-\\apache2\\conf\\httpd.conf'
+[Mon May 11 10:29:00.535928 2015] [mpm_winnt:notice] [pid 7028:tid 524] AH00418: Parent: Created child process 4172
+[Mon May 11 10:29:01.395303 2015] [ssl:warn] [pid 4172:tid 428] AH01909: localhost:443:0 server certificate does NOT include an ID which matches the server name
+[Mon May 11 10:29:01.770303 2015] [ssl:warn] [pid 4172:tid 428] AH01909: localhost:443:0 server certificate does NOT include an ID which matches the server name
+[Mon May 11 10:29:01.785928 2015] [mpm_winnt:notice] [pid 4172:tid 428] AH00354: Child: Starting 64 worker threads.
+[Mon May 11 10:30:21.438226 2015] [mpm_winnt:notice] [pid 7028:tid 524] AH00422: Parent: Received shutdown signal -- Shutting down the server.
+[Mon May 11 10:30:23.471165 2015] [mpm_winnt:notice] [pid 4172:tid 428] AH00364: Child: All worker threads have exited.
+[Mon May 11 10:30:23.501184 2015] [mpm_winnt:notice] [pid 7028:tid 524] AH00430: Parent: Child process 4172 exited successfully.
+[Mon May 11 10:30:32.722960 2015] [ssl:warn] [pid 2960:tid 524] AH01909: localhost:443:0 server certificate does NOT include an ID which matches the server name
+[Mon May 11 10:30:33.006639 2015] [ssl:warn] [pid 2960:tid 524] AH01909: localhost:443:0 server certificate does NOT include an ID which matches the server name
+[Mon May 11 10:30:33.047164 2015] [mpm_winnt:notice] [pid 2960:tid 524] AH00455: Apache/2.4.12 (Win32) OpenSSL/1.0.1l PHP/5.4.0 configured -- resuming normal operations
+[Mon May 11 10:30:33.047164 2015] [mpm_winnt:notice] [pid 2960:tid 524] AH00456: Apache Lounge VC9 Server built: Jan 30 2015 11:29:54
+[Mon May 11 10:30:33.047164 2015] [core:notice] [pid 2960:tid 524] AH00094: Command line: 'C:\\Bitnami\\DRUPAL~1.36-\\apache2\\bin\\httpd.exe -d C:/Bitnami/drupal-7.36-0/apache2 -f C:\\Bitnami\\DRUPAL~1.36-\\apache2\\conf\\httpd.conf'
+[Mon May 11 10:30:33.060673 2015] [mpm_winnt:notice] [pid 2960:tid 524] AH00418: Parent: Created child process 3632
+[Mon May 11 10:30:33.803640 2015] [ssl:warn] [pid 3632:tid 428] AH01909: localhost:443:0 server certificate does NOT include an ID which matches the server name
+[Mon May 11 10:30:34.073810 2015] [ssl:warn] [pid 3632:tid 428] AH01909: localhost:443:0 server certificate does NOT include an ID which matches the server name
+[Mon May 11 10:30:34.114336 2015] [mpm_winnt:notice] [pid 3632:tid 428] AH00354: Child: Starting 64 worker threads.
