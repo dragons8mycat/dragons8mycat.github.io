@@ -1,164 +1,805 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="Dragons8mycat - Geospatial Portfolio by Nicholas Duggan, Chartered Geographer">
+    <meta name="author" content="Nicholas Duggan">
+    <title>Dragons8mycat | Geospatial Portfolio</title>
 
-    <title>Dragons8mycat</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
-    <!-- Bootstrap Core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* ===== RESET & BASE ===== */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Lora', Georgia, serif;
+            color: #e0e0e0;
+            background: #0a0a0a;
+            overflow-x: hidden;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', 'Helvetica Neue', sans-serif;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        a { color: #219ab3; text-decoration: none; transition: color .3s; }
+        a:hover { color: #4dd9f7; }
 
-    <!-- Custom CSS -->
-    <link href="css/grayscale.css" rel="stylesheet">
+        /* ===== NAVIGATION ===== */
+        .navbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.2rem 2rem;
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            background: transparent;
+            transition: background .5s, padding .4s, backdrop-filter .5s;
+        }
+        .navbar.scrolled {
+            background: rgba(10, 10, 10, 0.92);
+            backdrop-filter: blur(12px);
+            padding: 0.7rem 2rem;
+            border-bottom: 1px solid rgba(255,255,255,.08);
+        }
+        .navbar-brand { color: #fff; font-weight: 700; font-size: 1rem; }
+        .navbar-brand span { font-weight: 300; }
+        .nav-links { display: flex; gap: 2rem; list-style: none; }
+        .nav-links a {
+            color: rgba(255,255,255,.75);
+            font-weight: 400;
+            transition: color .3s;
+            position: relative;
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px; left: 0;
+            width: 0; height: 2px;
+            background: #219ab3;
+            transition: width .3s;
+        }
+        .nav-links a:hover { color: #fff; }
+        .nav-links a:hover::after { width: 100%; }
 
-    <!-- Custom Fonts -->
-    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
-    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+        /* Mobile nav toggle */
+        .nav-toggle { display: none; background: none; border: none; cursor: pointer; padding: 0.5rem; }
+        .nav-toggle span { display: block; width: 24px; height: 2px; background: #fff; margin: 5px 0; transition: .3s; }
 
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+        @media (max-width: 768px) {
+            .nav-toggle { display: block; }
+            .nav-links {
+                position: fixed;
+                top: 0; right: -100%;
+                width: 70%;
+                height: 100vh;
+                flex-direction: column;
+                background: rgba(10,10,10,0.97);
+                padding: 5rem 2rem 2rem;
+                gap: 1.5rem;
+                transition: right .4s;
+            }
+            .nav-links.open { right: 0; }
+        }
 
+        /* ===== PARALLAX HERO ===== */
+        .parallax-container {
+            position: relative;
+            height: 100vh;
+            min-height: 600px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .parallax-bg {
+            position: absolute;
+            top: -20%;
+            left: -5%;
+            width: 110%;
+            height: 140%;
+            background: url('img/intro-bg.jpg') no-repeat center center;
+            background-size: cover;
+            will-change: transform;
+            filter: brightness(0.7);
+        }
+        /* Multi-layer depth overlay for 3D feel */
+        .parallax-container::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 80%, transparent 30%, rgba(0,0,0,0.6) 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
+        .parallax-container::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 200px;
+            background: linear-gradient(to top, #0a0a0a 0%, transparent 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 0 2rem;
+        }
+        .hero-content h1 {
+            font-size: clamp(1.5rem, 9.5vw, 6rem);
+            color: #fff;
+            margin-bottom: 1rem;
+            text-shadow: 0 4px 30px rgba(0,0,0,0.5);
+            white-space: nowrap;
+        }
+        .hero-content p {
+            font-size: clamp(0.75rem, 2.2vw, 1.4rem);
+            color: rgba(255,255,255,.8);
+            max-width: none;
+            margin: 0 auto 2rem;
+            line-height: 1.7;
+            white-space: nowrap;
+        }
+        .scroll-indicator {
+            display: inline-block;
+            width: 50px; height: 50px;
+            border: 2px solid rgba(255,255,255,.5);
+            border-radius: 50%;
+            font-size: 1.5rem;
+            color: rgba(255,255,255,.7);
+            line-height: 46px;
+            text-align: center;
+            animation: bounce 2s infinite;
+            transition: border-color .3s, color .3s;
+        }
+        .scroll-indicator:hover { border-color: #219ab3; color: #219ab3; }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(10px); }
+        }
+
+        /* ===== SECTIONS ===== */
+        section { padding: 6rem 2rem; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .section-heading {
+            text-align: center;
+            margin-bottom: 3.5rem;
+        }
+        .section-heading h2 {
+            font-size: clamp(1.6rem, 4vw, 2.4rem);
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+        .section-heading .accent-line {
+            width: 60px; height: 3px;
+            background: #219ab3;
+            margin: 0 auto 1.5rem;
+        }
+        .section-heading p {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,.6);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* ===== ABOUT ===== */
+        #about { background: #0a0a0a; }
+        #about .about-text {
+            max-width: 750px;
+            margin: 0 auto;
+            text-align: center;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: rgba(255,255,255,.75);
+        }
+        .credentials {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2.5rem;
+        }
+        .credential-badge {
+            background: rgba(33, 154, 179, 0.1);
+            border: 1px solid rgba(33, 154, 179, 0.3);
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #219ab3;
+        }
+
+        /* ===== PORTFOLIO ===== */
+        #portfolio {
+            background: linear-gradient(180deg, #0a0a0a 0%, #0f1419 50%, #0a0a0a 100%);
+        }
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+        .portfolio-item {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            aspect-ratio: 4/3;
+            cursor: pointer;
+            group: portfolio;
+        }
+        .portfolio-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform .6s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter .4s;
+            filter: grayscale(40%) brightness(0.85);
+        }
+        .portfolio-item:hover img {
+            transform: scale(1.08);
+            filter: grayscale(0%) brightness(1);
+        }
+        .portfolio-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 50%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 1.5rem;
+            opacity: 0;
+            transition: opacity .4s;
+        }
+        .portfolio-item:hover .portfolio-overlay { opacity: 1; }
+        .portfolio-overlay h3 {
+            font-size: 1rem;
+            letter-spacing: 1px;
+            color: #fff;
+            margin-bottom: 0.3rem;
+        }
+        .portfolio-overlay p {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,.6);
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* ===== LIGHTBOX ===== */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(0,0,0,0.95);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            cursor: zoom-out;
+        }
+        .lightbox.active { display: flex; }
+        .lightbox img {
+            max-width: 90vw;
+            max-height: 85vh;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+        .lightbox-close {
+            position: absolute;
+            top: 1.5rem; right: 2rem;
+            font-size: 2rem;
+            color: #fff;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-family: 'Montserrat', sans-serif;
+            transition: color .3s;
+        }
+        .lightbox-close:hover { color: #219ab3; }
+        .lightbox-title {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,.7);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* ===== GIS TOOLS (replaces old download section) ===== */
+        .tools-section {
+            background: url('img/gis-tools-bg.png') no-repeat center center;
+            background-size: cover;
+            background-attachment: fixed;
+            background-color: #0a0a0a;
+            position: relative;
+            min-height: 500px;
+            display: flex;
+            align-items: center;
+        }
+        .tools-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 50%, rgba(10,10,10,0.7) 0%, rgba(10,10,10,0.4) 60%, rgba(10,10,10,0.25) 100%);
+        }
+        .tools-section .container { position: relative; z-index: 1; text-shadow: 0 2px 15px rgba(0,0,0,0.8); }
+        .tools-grid {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .tool-btn {
+            display: inline-block;
+            padding: 0.9rem 2rem;
+            border: 1px solid #219ab3;
+            border-radius: 6px;
+            color: #219ab3;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: all .3s;
+        }
+        .tool-btn:hover {
+            background: #219ab3;
+            color: #0a0a0a;
+        }
+
+        /* ===== CONTACT ===== */
+        #contact { background: #0a0a0a; }
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+        .social-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            border: 1px solid rgba(255,255,255,.2);
+            border-radius: 6px;
+            color: rgba(255,255,255,.7);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all .3s;
+        }
+        .social-btn:hover {
+            border-color: #219ab3;
+            color: #219ab3;
+        }
+        .social-btn svg {
+            width: 18px; height: 18px;
+            fill: currentColor;
+        }
+
+        /* ===== MAP ===== */
+        .map-section { padding: 0; }
+        .map-section iframe {
+            width: 100%;
+            height: 400px;
+            border: none;
+            filter: grayscale(30%) brightness(0.9);
+            transition: filter .4s;
+        }
+        .map-section iframe:hover { filter: grayscale(0%) brightness(1); }
+
+        /* ===== FOOTER ===== */
+        footer {
+            text-align: center;
+            padding: 2.5rem;
+            border-top: 1px solid rgba(255,255,255,.06);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            color: rgba(255,255,255,.35);
+            letter-spacing: 1px;
+        }
+
+        /* ===== ANIMATIONS ===== */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity .8s, transform .8s;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===== SECRET MODAL ===== */
+        .secret-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background: rgba(0,0,0,0.92);
+            backdrop-filter: blur(16px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .secret-modal.active { display: flex; }
+        .secret-modal-content {
+            text-align: center;
+            max-width: 500px;
+        }
+        .secret-modal-content h2 {
+            font-size: 1.8rem;
+            color: #fff;
+            margin-bottom: 0.5rem;
+        }
+        .secret-modal-content p {
+            color: rgba(255,255,255,.6);
+            font-size: 1.1rem;
+            margin-bottom: 2.5rem;
+        }
+        .secret-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+        }
+        .secret-btn {
+            padding: 1rem 2.5rem;
+            border: 2px solid;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            background: transparent;
+            transition: all .3s;
+        }
+        .secret-btn.dragon {
+            border-color: #c0392b;
+            color: #c0392b;
+        }
+        .secret-btn.dragon:hover {
+            background: #c0392b;
+            color: #fff;
+            box-shadow: 0 0 30px rgba(192,57,43,0.4);
+        }
+        .secret-btn.cat {
+            border-color: #219ab3;
+            color: #219ab3;
+        }
+        .secret-btn.cat:hover {
+            background: #219ab3;
+            color: #fff;
+            box-shadow: 0 0 30px rgba(33,154,179,0.4);
+        }
+        .secret-modal-close {
+            position: absolute;
+            top: 1.5rem; right: 2rem;
+            font-size: 2rem;
+            color: rgba(255,255,255,.5);
+            cursor: pointer;
+            background: none;
+            border: none;
+            transition: color .3s;
+        }
+        .secret-modal-close:hover { color: #fff; }
+        .secret-video {
+            display: none;
+            max-width: 90vw;
+            max-height: 80vh;
+            border-radius: 12px;
+            margin-top: 1.5rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+        .secret-video.visible { display: block; }
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 640px) {
+            .portfolio-grid {
+                grid-template-columns: 1fr;
+            }
+            .portfolio-overlay { opacity: 1; }
+            section { padding: 4rem 1.5rem; }
+        }
+    </style>
 </head>
 
-<body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
-
+<body>
     <!-- Navigation -->
-    <nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-main-collapse">
-                    <i class="fa fa-bars"></i>
-                </button>
-                <a class="navbar-brand page-scroll" href="#page-top">
-                    <i class="fa fa-play-circle"></i>  <span class="light">Back</span> to Top
-                </a>
-            </div>
-
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse navbar-right navbar-main-collapse">
-                <ul class="nav navbar-nav">
-                    <!-- Hidden li included to remove active class from about link when scrolled up past about section -->
-                    <li class="hidden">
-                        <a href="#page-top"></a>
-                    </li>
-                    <li>
-                        <a class="page-scroll" href="http://dragons8mycat.com" target="_blank">Blog</a>
-                    </li>
-                    <li>
-                        <a class="page-scroll" href="http://dragons8mycat.com/things-to-do-in-hampshire-if-you-have-kids/" target="_blank">Maps...coming soon</a>
-                    </li>
-                    <li>
-                        <a class="page-scroll" href="mailto:dragons8mycat@live.co.uk" target="_blank">Contact</a>
-                    </li>
-                </ul>
-            </div>
-            <!-- /.navbar-collapse -->
-        </div>
-        <!-- /.container -->
+    <nav class="navbar" id="navbar">
+        <a class="navbar-brand" href="#top" onclick="event.preventDefault(); document.getElementById('secretModal').classList.add('active');">Dragons8mycat</a>
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+            <span></span><span></span><span></span>
+        </button>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#about">About</a></li>
+            <li><a href="#portfolio">Portfolio</a></li>
+            <li><a href="#tools">GIS Tools</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
     </nav>
 
-    <!-- Intro Header -->
-    <header class="intro">
-        <div class="intro-body">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-8 col-md-offset-2">
-                        <h1 class="brand-heading">Dragons8mycat</h1>
-                        <p class="intro-text">Welcome to the world of Dragons8mycat<br>Created by Nicholas & Shannon Duggan</p>
-                        <a href="#about" class="btn btn-circle page-scroll">
-                            <i class="fa fa-angle-double-down animated"></i>
-                        </a>
+    <!-- Hero with Parallax -->
+    <div class="parallax-container" id="top">
+        <div class="parallax-bg" id="parallaxBg"></div>
+        <div class="hero-content">
+            <h1>Dragons8mycat</h1>
+            <p>Chartered Geographer (GIS) &mdash; Research &amp; Innovation in Geospatial</p>
+            <a href="#about" class="scroll-indicator">&darr;</a>
+        </div>
+    </div>
+
+    <!-- About -->
+    <section id="about">
+        <div class="container">
+            <div class="section-heading fade-in">
+                <h2>Welcome</h2>
+                <div class="accent-line"></div>
+            </div>
+            <div class="about-text fade-in">
+                <p>Hi, I'm Nick Duggan &mdash; a Chartered Geographer and Fellow of the Royal Geographical Society with over two decades working at the forefront of the geospatial industry. I'm currently Research &amp; Innovation Manager at Idox Geospatial, where I get to explore the intersection of geospatial data, artificial intelligence, and strategic innovation &mdash; helping to shape new products and research across land, planning, and renewables.</p>
+                <p>I was fortunate to be recognised in the GEO100 as one of the world's most influential geospatial professionals, and I'm passionate about giving back to the community. Whether it's speaking at conferences, writing about the future of location intelligence and GeoAI, or mentoring the next generation of geospatial talent, I love sharing what I've learned along the way.</p>
+                <p>Have a look around &mdash; below you'll find a selection of my work, from 3D city models and tilt-shift cartography to bathymetric visualisations and beyond. I hope you enjoy it.</p>
+            </div>
+            <div class="credentials fade-in">
+                <div class="credential-badge">CGeog(GIS) &mdash; Chartered Geographer</div>
+                <div class="credential-badge">FRGS &mdash; Fellow of the RGS</div>
+                <div class="credential-badge">GEO100 Listed</div>
+                <div class="credential-badge">Speaker &amp; Mentor</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio -->
+    <section id="portfolio">
+        <div class="container">
+            <div class="section-heading fade-in">
+                <h2>Portfolio</h2>
+                <div class="accent-line"></div>
+                <p>A selection of geospatial visualisations, 3D models and mapping projects</p>
+            </div>
+            <div class="portfolio-grid">
+                <div class="portfolio-item fade-in" onclick="openLightbox(this)">
+                    <img src="img/portfolio/London3D1.jpg" alt="London 3D Visualisation" loading="lazy">
+                    <div class="portfolio-overlay">
+                        <h3>London 3D</h3>
+                        <p>3D City Model</p>
+                    </div>
+                </div>
+                <div class="portfolio-item fade-in" onclick="openLightbox(this)">
+                    <img src="img/portfolio/Southampton3D_Colout.jpg" alt="Southampton 3D Colour Model" loading="lazy">
+                    <div class="portfolio-overlay">
+                        <h3>Southampton 3D</h3>
+                        <p>3D Colour Model</p>
+                    </div>
+                </div>
+                <div class="portfolio-item fade-in" onclick="openLightbox(this)">
+                    <img src="img/portfolio/Milton-Keynes-tiltshift.jpg" alt="Milton Keynes Tilt-Shift" loading="lazy">
+                    <div class="portfolio-overlay">
+                        <h3>Milton Keynes</h3>
+                        <p>Tilt-Shift Cartography</p>
+                    </div>
+                </div>
+                <div class="portfolio-item fade-in" onclick="openLightbox(this)">
+                    <img src="img/portfolio/Southampton2D.jpg" alt="Southampton 2D Map" loading="lazy">
+                    <div class="portfolio-overlay">
+                        <h3>Southampton 2D</h3>
+                        <p>2D Mapping</p>
+                    </div>
+                </div>
+                <div class="portfolio-item fade-in" onclick="openLightbox(this)">
+                    <img src="img/portfolio/Holyhead-Example.png" alt="Holyhead Example" loading="lazy">
+                    <div class="portfolio-overlay">
+                        <h3>Holyhead</h3>
+                        <p>Geospatial Analysis</p>
+                    </div>
+                </div>
+                <div class="portfolio-item fade-in" onclick="openLightbox(this)">
+                    <img src="img/portfolio/3DBathyExample.jpg" alt="3D Bathymetry Example" loading="lazy">
+                    <div class="portfolio-overlay">
+                        <h3>3D Bathymetry</h3>
+                        <p>Underwater Terrain Model</p>
+                    </div>
+                </div>
+                <div class="portfolio-item fade-in" onclick="openLightbox(this)">
+                    <img src="img/portfolio/Southampton2D5.jpg" alt="Southampton 2.5D" loading="lazy">
+                    <div class="portfolio-overlay">
+                        <h3>Southampton 2.5D</h3>
+                        <p>2.5D Visualisation</p>
+                    </div>
+                </div>
+                <div class="portfolio-item fade-in" onclick="openLightbox(this)">
+                    <img src="img/portfolio/Southampton_Dell_Turbine.jpg" alt="Southampton Dell Turbine" loading="lazy">
+                    <div class="portfolio-overlay">
+                        <h3>Wind Turbine Analysis</h3>
+                        <p>Viewshed &amp; 3D Modelling</p>
                     </div>
                 </div>
             </div>
         </div>
-    </header>
+    </section>
 
-    <!-- About Section -->
-    <section id="about" class="container content-section text-center">
-        <div class="row">
-            <div class="col-lg-8 col-lg-offset-2">
-                <h2>Welcome</h2>
-                <p>This is the holding page for the new Dragons8mycat test area, here is where I'll be testing map techiques and js <a href="https://www.mapbox.com/mapbox.js/example/v1.0.0/" target="_blank">(javascript) maps</a>. My aim is to have an area where I can discover and share as I go along.</p>
-                <p>Currently I am playing with QGIS2Threejs <a href="http://dragons8mycat.github.io/3D/3ddemo.html" target="_blank">3D Demo 1</a> ,<a href="http://dragons8mycat.github.io/3D/wreck5demo.html" target="_blank">3D Demo 2</a> and <br> <a href="http://www.dragons8mycat.co.uk/3D/fake-kmlgadget.html?up_kml_url=http%3A%2F%2Fwww.dragons8mycat.co.uk%2F3D%2FSoton.kmz&up_view_mode=earth&up_lat=&up_lng=&up_zoom=&up_earth_2d_fallback=0&up_earth_fly_from_space=1&up_earth_show_nav_controls=1&up_earth_show_buildings=1&up_earth_show_terrain=1&up_earth_show_roads=0&up_earth_show_borders=1&up_earth_sphere=earth&up_maps_streetview=0&up_maps_zoom_out=0&up_maps_default_type=map" target="_blank">Google Earth 3D Model</a>.</p>
-                <p>I am Dragons8mycat</p>
+    <!-- GIS Tools -->
+    <section id="tools" class="tools-section">
+        <div class="container">
+            <div class="section-heading fade-in">
+                <h2>GIS in Your Hands</h2>
+                <div class="accent-line"></div>
+                <p>Giving you the power of knowledge</p>
+            </div>
+            <div class="tools-grid fade-in">
+                <a href="https://qgis.org/download/" target="_blank" class="tool-btn">Download QGIS</a>
             </div>
         </div>
     </section>
 
-    <!-- Download Section -->
-    <section id="download" class="content-section text-center">
-        <div class="download-section">
-            <div class="container">
-                <div class="col-lg-8 col-lg-offset-2">
-                    <h2>GIS in your hands</h2>
-                    <p>Giving you the power of knowledge</p>
-                    <a href="http://www2.qgis.org/en/site/forusers/download.html" target="_blank" class="btn btn-default btn-lg">Download QGIS</a>
-					<a href="http://www.esri.com/software/arcgis/explorer-desktop/download" target="_blank" class="btn btn-default btn-lg">Download ArcGIS Explorer</a>
-                </div>
+    <!-- Contact -->
+    <section id="contact">
+        <div class="container">
+            <div class="section-heading fade-in">
+                <h2>Get in Touch</h2>
+                <div class="accent-line"></div>
+                <p>Feel free to reach out &mdash; whether it's about geospatial projects, collaboration, or just to say hello</p>
+            </div>
+            <div class="social-links fade-in">
+                <a href="https://twitter.com/Dragons8mycat" target="_blank" class="social-btn">
+                    <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    X / Twitter
+                </a>
+                <a href="https://github.com/dragons8mycat" target="_blank" class="social-btn">
+                    <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                    GitHub
+                </a>
+                <a href="https://www.linkedin.com/in/dragons8mycat" target="_blank" class="social-btn">
+                    <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                    LinkedIn
+                </a>
             </div>
         </div>
     </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="container content-section text-center">
-        <div class="row">
-            <div class="col-lg-8 col-lg-offset-2">
-                <h2>Contact Dragons8mycat</h2>
-                <p>Feel free to email me to provide some feedback on our templates, give me suggestions for new subjects, or to just say hello!</p>
-                <p><a href="mailto:dragons8mycat@live.co.uk" target="_blank">Email Dragons8mycat</a>
-                </p>
-                <ul class="list-inline banner-social-buttons">
-                    <li>
-                        <a href="https://twitter.com/Dragons8mycat" target="_blank" class="btn btn-default btn-lg"><i class="fa fa-twitter fa-fw"></i> <span class="network-name">Twitter</span></a>
-                    </li>
-                    <li>
-                        <a href="https://github.com/IronSummitMedia/startbootstrap" target="_blank" class="btn btn-default btn-lg"><i class="fa fa-github fa-fw"></i> <span class="network-name">Github</span></a>
-                    </li>
-                    <li>
-                        <a href="https://plus.google.com/+NicholasDuggan/posts" target="_blank" class="btn btn-default btn-lg"><i class="fa fa-google-plus fa-fw"></i> <span class="network-name">Google+</span></a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </section>
-
-    <!-- Map Section -->
-    <div id="map"></div>
-	<iframe width='100%' height='400px' frameBorder='0' src='https://a.tiles.mapbox.com/v4/dragons8mycat.l048a0f4/attribution,zoompan,zoomwheel.html?access_token=pk.eyJ1IjoiZHJhZ29uczhteWNhdCIsImEiOiJYdVBrb1pjIn0.4SpOuc_04A7_8QENEug4rg'></iframe>
-    <iframe width='100%' height='400px' frameBorder='0' src='https://a.tiles.mapbox.com/v4/dragons8mycat.g8kcnan7/attribution,zoompan,zoomwheel,geocoder,share.html?access_token=pk.eyJ1IjoiZHJhZ29uczhteWNhdCIsImEiOiJYdVBrb1pjIn0.4SpOuc_04A7_8QENEug4rg'></iframe>
-    <!-- Custom Theme JavaScript -->
+    <!-- Map -->
+    <div class="map-section">
+        <iframe src='https://a.tiles.mapbox.com/v4/dragons8mycat.l048a0f4/attribution,zoompan,zoomwheel.html?access_token=pk.eyJ1IjoiZHJhZ29uczhteWNhdCIsImEiOiJYdVBrb1pjIn0.4SpOuc_04A7_8QENEug4rg' title="Interactive Map"></iframe>
+    </div>
 
     <!-- Footer -->
     <footer>
-        <div class="container text-center">
-            <p>Copyright &copy; dragons8mycat 2015</p>
-        </div>
+        <p>&copy; 2025 Dragons8mycat &mdash; Nicholas Duggan. All rights reserved.</p>
     </footer>
 
-    <!-- jQuery -->
-    <script src="js/jquery.js"></script>
+    <!-- Secret Easter Egg Modal -->
+    <div class="secret-modal" id="secretModal">
+        <button class="secret-modal-close" onclick="closeSecret()">&times;</button>
+        <div class="secret-modal-content" id="secretContent">
+            <h2>Choose wisely...</h2>
+            <p>Dragons or Cats?</p>
+            <div class="secret-buttons" id="secretButtons">
+                <button class="secret-btn dragon" onclick="chooseDragon()">Dragons</button>
+                <button class="secret-btn cat" onclick="chooseCat()">Cats</button>
+            </div>
+            <video class="secret-video" id="secretDragonVideo" controls>
+                <source src="img/dragons8mycat.mp4" type="video/mp4">
+            </video>
+            <video class="secret-video" id="secretCatVideo" controls>
+                <source src="img/catskilledmydragon.mp4" type="video/mp4">
+            </video>
+            <button class="secret-btn dragon" id="secretBack" style="display:none; margin-top: 1.5rem;" onclick="closeSecret()">Back to Site</button>
+        </div>
+    </div>
 
-    <!-- Bootstrap Core JavaScript -->
-    <script src="js/bootstrap.min.js"></script>
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+        <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+        <img id="lightboxImg" src="" alt="">
+        <div class="lightbox-title" id="lightboxTitle"></div>
+    </div>
 
-    <!-- Plugin JavaScript -->
-    <script src="js/jquery.easing.min.js"></script>
+    <script>
+        // Parallax scroll effect
+        const parallaxBg = document.getElementById('parallaxBg');
+        const navbar = document.getElementById('navbar');
 
-    
-    <script src="js/grayscale.js"></script>
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            // Parallax: background moves at 40% of scroll speed
+            if (parallaxBg) {
+                parallaxBg.style.transform = `translateY(${scrollY * 0.4}px)`;
+            }
+            // Navbar background on scroll
+            navbar.classList.toggle('scrolled', scrollY > 80);
+        }, { passive: true });
 
+        // Mobile nav toggle
+        const navToggle = document.getElementById('navToggle');
+        const navLinks = document.getElementById('navLinks');
+        navToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('open');
+        });
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => navLinks.classList.remove('open'));
+        });
+
+        // Fade-in on scroll (Intersection Observer)
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // Lightbox
+        function openLightbox(item) {
+            const img = item.querySelector('img');
+            const title = item.querySelector('h3');
+            document.getElementById('lightboxImg').src = img.src;
+            document.getElementById('lightboxTitle').textContent = title ? title.textContent : '';
+            document.getElementById('lightbox').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') { closeLightbox(); closeSecret(); }
+        });
+
+        // Secret Easter Egg
+        function chooseDragon() {
+            document.getElementById('secretButtons').style.display = 'none';
+            document.getElementById('secretContent').querySelector('h2').textContent = 'Good choice.';
+            document.getElementById('secretContent').querySelector('p').style.display = 'none';
+            const vid = document.getElementById('secretDragonVideo');
+            vid.classList.add('visible');
+            vid.play();
+            document.getElementById('secretBack').style.display = 'inline-block';
+        }
+        function chooseCat() {
+            document.getElementById('secretButtons').style.display = 'none';
+            document.getElementById('secretContent').querySelector('h2').textContent = 'Bold choice...';
+            document.getElementById('secretContent').querySelector('p').style.display = 'none';
+            const vid = document.getElementById('secretCatVideo');
+            vid.classList.add('visible');
+            vid.play();
+            document.getElementById('secretBack').style.display = 'inline-block';
+        }
+        function closeSecret() {
+            const modal = document.getElementById('secretModal');
+            ['secretDragonVideo', 'secretCatVideo'].forEach(id => {
+                const vid = document.getElementById(id);
+                vid.pause();
+                vid.currentTime = 0;
+                vid.classList.remove('visible');
+            });
+            document.getElementById('secretBack').style.display = 'none';
+            document.getElementById('secretButtons').style.display = 'flex';
+            document.getElementById('secretContent').querySelector('h2').textContent = 'Choose wisely...';
+            const subtitle = document.getElementById('secretContent').querySelector('p');
+            subtitle.textContent = 'Dragons or Cats?';
+            subtitle.style.display = '';
+            modal.classList.remove('active');
+        }
+    </script>
 </body>
-
 </html>
