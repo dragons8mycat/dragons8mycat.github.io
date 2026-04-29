@@ -5,9 +5,11 @@ This folder contains the first MVP scaffold for moving the workbook-based data l
 ## What is here
 
 - `index.html`
-  Static GitHub Pages frontend shell.
+  Stage-first Sales and Leadership experience.
+- `admin.html`
+  Separate admin page for dataset-level stewardship and workbook-style maintenance.
 - `assets/`
-  CSS and browser-side JavaScript for the explorer and ops queue preview.
+  CSS and browser-side JavaScript for the stage view and admin view.
 - `data/mvp-data.json`
   Generated workbook export consumed by the static UI.
 - `scripts/export_workbook_to_json.py`

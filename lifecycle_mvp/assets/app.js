@@ -1,26 +1,29 @@
 const DATA_URL = "./data/mvp-data.json";
 
 const state = {
-  allDatasets: [],
-  filteredDatasets: [],
-  selectedId: null,
-  filters: {
-    search: "",
-    projectType: "",
-    stage: "",
-    matchStatus: "",
-  },
+  data: null,
+  projectType: "",
+  stageName: "",
+  search: "",
 };
 
 const elements = {
-  projectFilter: document.getElementById("projectFilter"),
-  stageFilter: document.getElementById("stageFilter"),
-  statusFilter: document.getElementById("statusFilter"),
-  searchInput: document.getElementById("searchInput"),
-  datasetList: document.getElementById("datasetList"),
-  datasetDetail: document.getElementById("datasetDetail"),
-  queueList: document.getElementById("queueList"),
-  resultsCount: document.querySelector("[data-results-count]"),
+  projectTypeSelect: document.getElementById("projectTypeSelect"),
+  stageSearchInput: document.getElementById("stageSearchInput"),
+  stageNavigator: document.getElementById("stageNavigator"),
+  stageHeading: document.getElementById("stageHeading"),
+  stageReadinessCopy: document.getElementById("stageReadinessCopy"),
+  readinessBadge: document.getElementById("readinessBadge"),
+  heldCount: document.getElementById("heldCount"),
+  reviewCount: document.getElementById("reviewCount"),
+  gapCount: document.getElementById("gapCount"),
+  unknownCount: document.getElementById("unknownCount"),
+  stagePurpose: document.getElementById("stagePurpose"),
+  topHeldList: document.getElementById("topHeldList"),
+  topGapList: document.getElementById("topGapList"),
+  roleGroups: document.getElementById("roleGroups"),
+  scoreStrip: document.getElementById("scoreStrip"),
+  strategicGapList: document.getElementById("strategicGapList"),
 };
 
 async function loadData() {
@@ -28,169 +31,200 @@ async function loadData() {
   if (!response.ok) {
     throw new Error(`Could not load ${DATA_URL}`);
   }
-  const data = await response.json();
-  state.allDatasets = data.datasets;
-  state.filteredDatasets = data.datasets;
-  bindSummary(data.summary);
-  populateFilters(data.filters);
-  renderQueue(data.reviewQueue);
-  renderDatasetList();
-  if (data.datasets.length > 0) {
-    selectDataset(data.datasets[0].dataId);
-  }
+
+  state.data = await response.json();
+  const projectTypes = state.data.projectTypes;
+  state.projectType = projectTypes[0]?.name ?? "";
+  state.stageName = projectTypes[0]?.stages[0]?.stageName ?? "";
+  populateProjectTypes(projectTypes);
+  bindProjectSummary();
+  renderProject();
 }
 
-function bindSummary(summary) {
-  Object.entries(summary).forEach(([key, value]) => {
-    const el = document.querySelector(`[data-summary="${key}"]`);
-    if (el) {
-      el.textContent = Number(value).toLocaleString();
+function populateProjectTypes(projectTypes) {
+  elements.projectTypeSelect.innerHTML = projectTypes
+    .map((project) => `<option value="${escapeHtml(project.name)}">${escapeHtml(project.name)}</option>`)
+    .join("");
+  elements.projectTypeSelect.value = state.projectType;
+}
+
+function bindProjectSummary() {
+  const project = currentProject();
+  if (!project) return;
+
+  setSummaryValue("selectedStageCount", project.stageCount);
+  setSummaryValue("selectedAtRiskCount", project.atRiskCount);
+  setSummaryValue("selectedBlockedCount", project.blockedCount);
+  setSummaryValue("strategicGapCount", project.strategicGapCount);
+}
+
+function renderProject() {
+  const project = currentProject();
+  if (!project) return;
+
+  bindProjectSummary();
+  renderStageNavigator(project);
+  renderStageDetail(currentStage());
+  renderStrategicGaps(project);
+}
+
+function renderStageNavigator(project) {
+  elements.stageNavigator.innerHTML = project.stages.map((stage) => `
+    <article class="stage-button ${stage.stageName === state.stageName ? "is-active" : ""}" data-stage="${escapeHtml(stage.stageName)}">
+      <div class="status-dot ${readinessClass(stage.readiness)}">${escapeHtml(labelForReadiness(stage.readiness))}</div>
+      <h3>${escapeHtml(stage.stageName)}</h3>
+      <div class="chip-row">
+        <span class="tag success">${stage.counts.held} held</span>
+        <span class="tag warning">${stage.counts.review} review</span>
+        <span class="tag danger">${stage.counts.gap} gaps</span>
+      </div>
+    </article>
+  `).join("");
+
+  elements.stageNavigator.querySelectorAll(".stage-button").forEach((button) => {
+    button.addEventListener("click", () => {
+      state.stageName = button.dataset.stage;
+      renderProject();
+    });
+  });
+}
+
+function renderStageDetail(stage) {
+  if (!stage) return;
+
+  elements.stageHeading.textContent = stage.stageName;
+  elements.stageReadinessCopy.textContent = stage.readinessNarrative;
+  elements.readinessBadge.textContent = labelForReadiness(stage.readiness);
+  elements.readinessBadge.className = `readiness-badge ${readinessBadgeClass(stage.readiness)}`;
+  elements.heldCount.textContent = stage.counts.held;
+  elements.reviewCount.textContent = stage.counts.review;
+  elements.gapCount.textContent = stage.counts.gap;
+  elements.unknownCount.textContent = stage.counts.unknownRole;
+  elements.stagePurpose.textContent = stage.stagePurpose;
+
+  elements.topHeldList.innerHTML = renderList(stage.topHeld, "Held datasets already supporting this stage.");
+  elements.topGapList.innerHTML = renderList(stage.topGaps, "No immediate gap or validation flags for this stage.");
+  renderRoleGroups(stage);
+  renderScoreStrip(stage);
+}
+
+function renderRoleGroups(stage) {
+  const searchNeedle = state.search.trim().toLowerCase();
+  elements.roleGroups.innerHTML = stage.roleGroups.map((group) => {
+    const items = group.items.filter((item) => {
+      if (!searchNeedle) return true;
+      const haystack = [item.commonName, item.productFamily, item.supplier, item.source].join(" ").toLowerCase();
+      return haystack.includes(searchNeedle);
+    });
+
+    if (items.length === 0) {
+      return "";
     }
-  });
-}
 
-function populateFilters(filters) {
-  for (const projectType of filters.projectTypes) {
-    elements.projectFilter.append(new Option(projectType, projectType));
-  }
-  for (const stage of filters.stages) {
-    elements.stageFilter.append(new Option(stage, stage));
-  }
-  for (const status of filters.matchStatuses) {
-    elements.statusFilter.append(new Option(status, status));
-  }
-}
-
-function applyFilters() {
-  const searchNeedle = state.filters.search.trim().toLowerCase();
-  state.filteredDatasets = state.allDatasets.filter((dataset) => {
-    const haystack = [
-      dataset.commonName,
-      dataset.dataClass,
-      dataset.productFamily,
-      dataset.supplier,
-      dataset.source,
-    ].join(" ").toLowerCase();
-
-    const matchesSearch = !searchNeedle || haystack.includes(searchNeedle);
-    const matchesProject = !state.filters.projectType || dataset.projectTypes.includes(state.filters.projectType);
-    const matchesStage = !state.filters.stage || dataset.stageNames.includes(state.filters.stage);
-    const matchesStatus = !state.filters.matchStatus || dataset.matchStatus === state.filters.matchStatus;
-    return matchesSearch && matchesProject && matchesStage && matchesStatus;
-  });
-
-  renderDatasetList();
-  if (!state.filteredDatasets.some((item) => item.dataId === state.selectedId)) {
-    selectDataset(state.filteredDatasets[0]?.dataId ?? null);
-  } else {
-    renderDatasetDetail();
-  }
-}
-
-function renderDatasetList() {
-  elements.resultsCount.textContent = `${state.filteredDatasets.length.toLocaleString()} results`;
-  if (state.filteredDatasets.length === 0) {
-    elements.datasetList.innerHTML = "<p>No datasets match the current filters.</p>";
-    return;
-  }
-
-  elements.datasetList.innerHTML = state.filteredDatasets.map((dataset) => {
-    const statusClass = statusTone(dataset.matchStatus);
     return `
-      <article class="dataset-card ${dataset.dataId === state.selectedId ? "is-active" : ""}" data-id="${dataset.dataId}">
-        <div class="dataset-card-top">
-          <div>
-            <h3>${escapeHtml(dataset.commonName)}</h3>
-            <p class="dataset-meta">${escapeHtml(dataset.productFamily || "Unclassified")} • ${escapeHtml(dataset.supplier || "No supplier")}</p>
-          </div>
-          <span class="tag ${statusClass}">${escapeHtml(dataset.matchStatus)}</span>
-        </div>
-        <div class="dataset-meta">
-          <span class="tag">${escapeHtml(dataset.dataClass || "Unknown class")}</span>
-          <span class="tag">${dataset.usageCount} stage uses</span>
-          <span class="tag">${dataset.projectTypes.length} project types</span>
-        </div>
+      <article class="role-group">
+        <h4>${escapeHtml(group.label)} <span class="mini-note">(${items.length})</span></h4>
+        <ul class="detail-list">
+          ${items.slice(0, 18).map((item) => `
+            <li>
+              <strong>${escapeHtml(item.commonName)}</strong>
+              <div class="chip-row">
+                <span class="role-chip ${statusTone(item.status)}">${escapeHtml(item.statusLabel)}</span>
+                <span class="role-chip">${escapeHtml(item.productFamily || "No family")}</span>
+                <span class="role-chip">${escapeHtml(item.supplier || "No supplier")}</span>
+              </div>
+            </li>
+          `).join("")}
+        </ul>
       </article>
     `;
-  }).join("");
-
-  elements.datasetList.querySelectorAll(".dataset-card").forEach((card) => {
-    card.addEventListener("click", () => selectDataset(card.dataset.id));
-  });
+  }).join("") || `<p class="empty-state">No stage items match the current search.</p>`;
 }
 
-function selectDataset(dataId) {
-  state.selectedId = dataId;
-  renderDatasetList();
-  renderDatasetDetail();
-}
-
-function renderDatasetDetail() {
-  const dataset = state.filteredDatasets.find((item) => item.dataId === state.selectedId)
-    || state.allDatasets.find((item) => item.dataId === state.selectedId);
-
-  if (!dataset) {
-    elements.datasetDetail.innerHTML = `
-      <div class="detail-empty">
-        <p>Select a dataset to view lifecycle usage, match status, and supplier context.</p>
-      </div>
-    `;
-    return;
-  }
-
-  elements.datasetDetail.innerHTML = `
-    <div class="detail-header">
-      <div>
-        <p class="eyebrow">Dataset Detail</p>
-        <h3>${escapeHtml(dataset.commonName)}</h3>
-      </div>
-      <span class="tag ${statusTone(dataset.matchStatus)}">${escapeHtml(dataset.matchStatus)}</span>
-    </div>
-    <p class="detail-copy">Mapped to ${dataset.usageCount} lifecycle stage rows across ${dataset.projectTypes.length} project types.</p>
-    <div class="detail-meta">
-      <span class="tag">${escapeHtml(dataset.dataClass || "Unknown class")}</span>
-      <span class="tag">${escapeHtml(dataset.productFamily || "No family")}</span>
-      <span class="tag">${escapeHtml(dataset.source || "No source")}</span>
-    </div>
-    <div class="detail-section">
-      <h4>Project types</h4>
-      <ul class="detail-list">${dataset.projectTypes.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
-    </div>
-    <div class="detail-section">
-      <h4>Lifecycle stages</h4>
-      <ul class="detail-list">${dataset.stageNames.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul>
-    </div>
-    <div class="detail-section">
-      <h4>Ops notes</h4>
-      <ul class="detail-list">
-        <li>Supplier: ${escapeHtml(dataset.supplier || "Unknown")}</li>
-        <li>Variant count: ${dataset.variantCount}</li>
-        <li>Confidence: ${dataset.confidence ?? "N/A"}</li>
-      </ul>
-    </div>
+function renderScoreStrip(stage) {
+  elements.scoreStrip.innerHTML = `
+    <article class="score-item">
+      <span>Analytical</span>
+      <strong>${stage.roleCounts.Analytical}</strong>
+    </article>
+    <article class="score-item">
+      <span>Basemapping</span>
+      <strong>${stage.roleCounts.Basemapping}</strong>
+    </article>
+    <article class="score-item">
+      <span>Contextual</span>
+      <strong>${stage.roleCounts["Descriptive/Contextual"]}</strong>
+    </article>
+    <article class="score-item">
+      <span>Unknown role</span>
+      <strong>${stage.roleCounts.Unknown}</strong>
+    </article>
   `;
 }
 
-function renderQueue(queueItems) {
-  elements.queueList.innerHTML = queueItems.map((item) => `
-    <article class="queue-card">
-      <div class="queue-card-top">
-        <div>
-          <p class="eyebrow">${escapeHtml(item.queueType)}</p>
-          <h3>${escapeHtml(item.title)}</h3>
-        </div>
-        <span class="status-pill">${escapeHtml(item.status)}</span>
-      </div>
-      <p>${escapeHtml(item.description)}</p>
-    </article>
-  `).join("");
+function renderStrategicGaps(project) {
+  if (project.strategicGaps.length === 0) {
+    elements.strategicGapList.innerHTML = `<p class="empty-state">No explicit additions or strategic gaps have been flagged for ${escapeHtml(project.name)}.</p>`;
+    return;
+  }
+
+  elements.strategicGapList.innerHTML = `
+    <ul class="stack-list">
+      ${project.strategicGaps.slice(0, 10).map((gap) => `
+        <li>
+          <strong>${escapeHtml(gap.commonName)}</strong>
+          <div class="chip-row">
+            <span class="role-chip danger">${escapeHtml(gap.source || "Gap")}</span>
+            <span class="role-chip">${escapeHtml(gap.targetRoles || "No target roles")}</span>
+          </div>
+        </li>
+      `).join("")}
+    </ul>
+  `;
+}
+
+function currentProject() {
+  return state.data?.projectTypes.find((project) => project.name === state.projectType) ?? null;
+}
+
+function currentStage() {
+  return currentProject()?.stages.find((stage) => stage.stageName === state.stageName) ?? null;
+}
+
+function renderList(items, emptyMessage) {
+  if (!items.length) {
+    return `<li>${escapeHtml(emptyMessage)}</li>`;
+  }
+  return items.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
+}
+
+function setSummaryValue(key, value) {
+  const el = document.querySelector(`[data-summary="${key}"]`);
+  if (el) el.textContent = Number(value).toLocaleString();
+}
+
+function labelForReadiness(readiness) {
+  if (readiness === "blocked") return "Not yet credible";
+  if (readiness === "at-risk") return "Ready with caveats";
+  return "Ready now";
+}
+
+function readinessClass(readiness) {
+  if (readiness === "blocked") return "blocked";
+  if (readiness === "at-risk") return "at-risk";
+  return "";
+}
+
+function readinessBadgeClass(readiness) {
+  if (readiness === "blocked") return "readiness-blocked";
+  if (readiness === "at-risk") return "readiness-risk";
+  return "readiness-ready";
 }
 
 function statusTone(status) {
-  const value = status.toLowerCase();
-  if (value.includes("review")) return "warning";
-  if (value.includes("no match") || value.includes("gap")) return "danger";
-  return "";
+  if (status === "gap") return "danger";
+  if (status === "review" || status === "unknown") return "warning";
+  return "success";
 }
 
 function escapeHtml(value) {
@@ -202,31 +236,17 @@ function escapeHtml(value) {
     .replaceAll("'", "&#39;");
 }
 
-elements.searchInput.addEventListener("input", (event) => {
-  state.filters.search = event.target.value;
-  applyFilters();
+elements.projectTypeSelect.addEventListener("change", (event) => {
+  state.projectType = event.target.value;
+  state.stageName = currentProject()?.stages[0]?.stageName ?? "";
+  renderProject();
 });
 
-elements.projectFilter.addEventListener("change", (event) => {
-  state.filters.projectType = event.target.value;
-  applyFilters();
-});
-
-elements.stageFilter.addEventListener("change", (event) => {
-  state.filters.stage = event.target.value;
-  applyFilters();
-});
-
-elements.statusFilter.addEventListener("change", (event) => {
-  state.filters.matchStatus = event.target.value;
-  applyFilters();
+elements.stageSearchInput.addEventListener("input", (event) => {
+  state.search = event.target.value;
+  renderStageDetail(currentStage());
 });
 
 loadData().catch((error) => {
-  elements.datasetList.innerHTML = `<p>${escapeHtml(error.message)}</p>`;
-  elements.datasetDetail.innerHTML = `
-    <div class="detail-empty">
-      <p>The page loaded, but the workbook export JSON is missing. Run <code>python scripts/export_workbook_to_json.py</code>.</p>
-    </div>
-  `;
+  document.body.innerHTML = `<main class="site-shell"><section class="panel"><p>${escapeHtml(error.message)}</p></section></main>`;
 });

@@ -3,149 +3,171 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Data Lifecycles MVP</title>
+  <title>Idox Geospatial | Data Lifecycles MVP</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./assets/styles.css">
 </head>
-<body>
-  <div class="page-shell">
-    <header class="hero">
-      <div class="hero-copy">
-        <p class="eyebrow">Data Lifecycles MVP</p>
-        <h1>From workbook stewardship to a searchable, review-driven data product.</h1>
-        <p class="hero-text">
-          A static MVP shell for GitHub Pages backed by exported workbook JSON today and designed
-          to connect to Supabase next.
-        </p>
-        <div class="hero-actions">
-          <a class="button button-primary" href="#explorer">Open Explorer</a>
-          <a class="button button-secondary" href="#ops">Open Ops Queue</a>
-        </div>
-      </div>
-      <aside class="hero-panel">
-        <div class="metric-card">
-          <span class="metric-label">Datasets</span>
-          <strong class="metric-value" data-summary="datasetCount">0</strong>
-        </div>
-        <div class="metric-card">
-          <span class="metric-label">Stage Mappings</span>
-          <strong class="metric-value" data-summary="stageRowCount">0</strong>
-        </div>
-        <div class="metric-card">
-          <span class="metric-label">Project Types</span>
-          <strong class="metric-value" data-summary="projectTypeCount">0</strong>
-        </div>
-        <div class="metric-card">
-          <span class="metric-label">Needs Review</span>
-          <strong class="metric-value" data-summary="reviewCount">0</strong>
-        </div>
-      </aside>
+<body class="app-body">
+  <div class="site-shell">
+    <header class="site-header">
+      <a class="brand" href="./index.html">
+        <span class="brand-kicker">Idox Geospatial</span>
+        <strong>Data Lifecycles MVP</strong>
+      </a>
+      <nav class="top-nav">
+        <a href="./index.html" class="is-active">Stage View</a>
+        <a href="./admin.html">Admin View</a>
+      </nav>
     </header>
 
     <main>
-      <section class="panel panel-overview" id="overview">
-        <div class="panel-heading">
-          <div>
-            <p class="eyebrow">Operating Model</p>
-            <h2>MVP shape</h2>
+      <section class="hero hero-stage">
+        <div class="hero-main">
+          <p class="eyebrow">Sales & Leadership View</p>
+          <h1>Find the right data for each project stage, and see whether you can proceed with confidence.</h1>
+          <p class="hero-copy">
+            This view is built for stage-gate decisions. Start with a project type, move through the lifecycle,
+            and see what data is in hand, what needs validation, and what gaps could slow delivery.
+          </p>
+          <div class="selector-bar">
+            <label>
+              <span>Project type</span>
+              <select id="projectTypeSelect"></select>
+            </label>
+            <label>
+              <span>Show datasets containing</span>
+              <input id="stageSearchInput" type="search" placeholder="Search within the selected project type">
+            </label>
           </div>
-          <p class="panel-note">Sales suggests. Ops reviews. Only approved changes publish.</p>
         </div>
-        <div class="overview-grid">
-          <article class="overview-card">
-            <h3>Sales mode</h3>
-            <p>Search by project, stage, or dataset, then submit client-usage feedback and suggested changes.</p>
-          </article>
-          <article class="overview-card">
-            <h3>Ops mode</h3>
-            <p>Review low-confidence catalogue matches, proposed additions, and Sales submissions in one queue.</p>
-          </article>
-          <article class="overview-card">
-            <h3>Catalogue imports</h3>
-            <p>New supplier rows land as raw records, are normalized, matched, scored, and only then reviewed.</p>
-          </article>
-        </div>
+
+        <aside class="hero-side">
+          <div class="hero-stat">
+            <span>Stages</span>
+            <strong data-summary="selectedStageCount">0</strong>
+          </div>
+          <div class="hero-stat">
+            <span>At risk</span>
+            <strong data-summary="selectedAtRiskCount">0</strong>
+          </div>
+          <div class="hero-stat">
+            <span>Blocked</span>
+            <strong data-summary="selectedBlockedCount">0</strong>
+          </div>
+          <div class="hero-stat">
+            <span>Strategic gaps</span>
+            <strong data-summary="strategicGapCount">0</strong>
+          </div>
+        </aside>
       </section>
 
-      <section class="panel" id="explorer">
-        <div class="panel-heading">
+      <section class="panel">
+        <div class="panel-header">
           <div>
-            <p class="eyebrow">Search & Filters</p>
-            <h2>Dataset explorer</h2>
+            <p class="eyebrow">Lifecycle Navigator</p>
+            <h2>Project journey</h2>
           </div>
-          <p class="panel-note">This is powered by generated JSON now and maps directly to the planned `asset` and `stage_asset_requirement` tables.</p>
+          <p class="panel-copy">Choose a stage to understand the decision context, the most important data, and where action is needed.</p>
+        </div>
+        <div id="stageNavigator" class="stage-nav"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">Stage Overview</p>
+            <h2 id="stageHeading">Stage readiness</h2>
+          </div>
+          <p class="panel-copy" id="stageReadinessCopy">Select a stage to view readiness, held data, and gaps.</p>
         </div>
 
-        <div class="filter-bar">
-          <label>
-            <span>Search</span>
-            <input id="searchInput" type="search" placeholder="Search datasets, product family, or supplier">
-          </label>
-          <label>
-            <span>Project type</span>
-            <select id="projectFilter">
-              <option value="">All</option>
-            </select>
-          </label>
-          <label>
-            <span>Stage</span>
-            <select id="stageFilter">
-              <option value="">All</option>
-            </select>
-          </label>
-          <label>
-            <span>Match status</span>
-            <select id="statusFilter">
-              <option value="">All</option>
-            </select>
-          </label>
+        <div class="stage-overview-grid">
+          <article class="overview-tile">
+            <span class="tile-label">Ready to proceed</span>
+            <strong id="readinessBadge" class="readiness-badge readiness-ready">Ready now</strong>
+          </article>
+          <article class="overview-tile">
+            <span class="tile-label">Held data</span>
+            <strong id="heldCount">0</strong>
+          </article>
+          <article class="overview-tile">
+            <span class="tile-label">Needs validation</span>
+            <strong id="reviewCount">0</strong>
+          </article>
+          <article class="overview-tile">
+            <span class="tile-label">Gaps / weak coverage</span>
+            <strong id="gapCount">0</strong>
+          </article>
+          <article class="overview-tile">
+            <span class="tile-label">Unknown role items</span>
+            <strong id="unknownCount">0</strong>
+          </article>
         </div>
 
-        <div class="results-layout">
-          <div class="results-panel">
-            <div class="results-head">
-              <strong data-results-count>0 results</strong>
-            </div>
-            <div id="datasetList" class="dataset-list"></div>
+        <div class="stage-layout">
+          <div class="stage-main">
+            <article class="detail-card">
+              <h3>Stage purpose</h3>
+              <p id="stagePurpose" class="detail-copy"></p>
+            </article>
+
+            <article class="detail-card">
+              <div class="card-heading">
+                <h3>Decision-ready summary</h3>
+                <span class="mini-note">Top signals for this stage</span>
+              </div>
+              <div class="summary-columns">
+                <div>
+                  <h4>In hand</h4>
+                  <ul id="topHeldList" class="data-list"></ul>
+                </div>
+                <div>
+                  <h4>Need to source or validate</h4>
+                  <ul id="topGapList" class="data-list"></ul>
+                </div>
+              </div>
+            </article>
+
+            <article class="detail-card">
+              <div class="card-heading">
+                <h3>Data by role</h3>
+                <span class="mini-note">Analytical first, then operational support, then context</span>
+              </div>
+              <div id="roleGroups" class="role-groups"></div>
+            </article>
           </div>
-          <aside id="datasetDetail" class="detail-panel">
-            <div class="detail-empty">
-              <p>Select a dataset to view lifecycle usage, match status, and supplier context.</p>
-            </div>
+
+          <aside class="stage-side">
+            <article class="detail-card">
+              <div class="card-heading">
+                <h3>Stage scorecard</h3>
+              </div>
+              <div id="scoreStrip" class="score-strip"></div>
+            </article>
+
+            <article class="detail-card">
+              <div class="card-heading">
+                <h3>Strategic gaps</h3>
+                <span class="mini-note">Project-type additions and watch items</span>
+              </div>
+              <div id="strategicGapList" class="stack-list"></div>
+            </article>
+
+            <article class="detail-card">
+              <div class="card-heading">
+                <h3>Admin route</h3>
+              </div>
+              <p class="detail-copy">Use the admin page for workbook-style maintenance, catalogue review, and dataset-level stewardship.</p>
+              <a class="button-link" href="./admin.html">Open admin view</a>
+            </article>
           </aside>
         </div>
-      </section>
-
-      <section class="panel" id="ops">
-        <div class="panel-heading">
-          <div>
-            <p class="eyebrow">Data/Product Ops</p>
-            <h2>Review queue preview</h2>
-          </div>
-          <p class="panel-note">The live version will be backed by `review_queue`, `asset_reconciliation`, and `client_usage_submission`.</p>
-        </div>
-        <div class="queue-grid" id="queueList"></div>
-      </section>
-
-      <section class="panel" id="next-steps">
-        <div class="panel-heading">
-          <div>
-            <p class="eyebrow">Implementation Notes</p>
-            <h2>What is wired today</h2>
-          </div>
-        </div>
-        <ul class="note-list">
-          <li>Static frontend suitable for GitHub Pages.</li>
-          <li>Workbook export script generates the JSON used by this UI.</li>
-          <li>SQL files define the `data_lifecycles_mvp` schema and baseline tables for Supabase/Postgres.</li>
-          <li>When network access to Supabase is available, the schema and data importer can be applied without changing the UI model.</li>
-        </ul>
       </section>
     </main>
   </div>
 
-  <script src="./assets/app.js" type="module"></script>
+  <script type="module" src="./assets/app.js"></script>
 </body>
 </html>

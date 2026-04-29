@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Idox Geospatial | Data Lifecycles Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/styles.css">
+</head>
+<body class="app-body">
+  <div class="site-shell">
+    <header class="site-header">
+      <a class="brand" href="./index.html">
+        <span class="brand-kicker">Idox Geospatial</span>
+        <strong>Data Lifecycles MVP</strong>
+      </a>
+      <nav class="top-nav">
+        <a href="./index.html">Stage View</a>
+        <a href="./admin.html" class="is-active">Admin View</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero hero-admin">
+        <div class="hero-main">
+          <p class="eyebrow">Data/Product Ops View</p>
+          <h1>Maintain the master data, inspect lifecycle mappings, and review changes safely.</h1>
+          <p class="hero-copy">
+            This page keeps the workbook-style dataset view, but moves it behind a dedicated admin route so it does
+            not get in the way of stage-led decision support.
+          </p>
+        </div>
+        <aside class="hero-side">
+          <div class="hero-stat">
+            <span>Datasets</span>
+            <strong data-summary="datasetCount">0</strong>
+          </div>
+          <div class="hero-stat">
+            <span>Stage rows</span>
+            <strong data-summary="stageRowCount">0</strong>
+          </div>
+          <div class="hero-stat">
+            <span>Review items</span>
+            <strong data-summary="reviewCount">0</strong>
+          </div>
+          <div class="hero-stat">
+            <span>Project types</span>
+            <strong data-summary="projectTypeCount">0</strong>
+          </div>
+        </aside>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">Dataset Maintenance</p>
+            <h2>Explorer</h2>
+          </div>
+          <p class="panel-copy">Search by dataset, supplier, product family, project type, or stage. This is the maintenance-oriented view, not the main user journey.</p>
+        </div>
+
+        <div class="filter-grid">
+          <label>
+            <span>Search</span>
+            <input id="searchInput" type="search" placeholder="Search datasets, product family, or supplier">
+          </label>
+          <label>
+            <span>Project type</span>
+            <select id="projectFilter">
+              <option value="">All</option>
+            </select>
+          </label>
+          <label>
+            <span>Stage</span>
+            <select id="stageFilter">
+              <option value="">All</option>
+            </select>
+          </label>
+          <label>
+            <span>Match status</span>
+            <select id="statusFilter">
+              <option value="">All</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="admin-layout">
+          <div class="results-panel">
+            <div class="results-head">
+              <strong data-results-count>0 results</strong>
+            </div>
+            <div id="datasetList" class="dataset-list"></div>
+          </div>
+          <aside id="datasetDetail" class="detail-panel">
+            <div class="detail-empty">
+              <p>Select a dataset to inspect lifecycle usage, supplier context, and stewardship notes.</p>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">Review Queue</p>
+            <h2>Current exceptions</h2>
+          </div>
+        </div>
+        <div id="queueList" class="queue-grid"></div>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="./assets/admin.js"></script>
+</body>
+</html>
