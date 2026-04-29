@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Lifecycles MVP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/styles.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Data Lifecycles MVP</p>
+        <h1>From workbook stewardship to a searchable, review-driven data product.</h1>
+        <p class="hero-text">
+          A static MVP shell for GitHub Pages backed by exported workbook JSON today and designed
+          to connect to Supabase next.
+        </p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#explorer">Open Explorer</a>
+          <a class="button button-secondary" href="#ops">Open Ops Queue</a>
+        </div>
+      </div>
+      <aside class="hero-panel">
+        <div class="metric-card">
+          <span class="metric-label">Datasets</span>
+          <strong class="metric-value" data-summary="datasetCount">0</strong>
+        </div>
+        <div class="metric-card">
+          <span class="metric-label">Stage Mappings</span>
+          <strong class="metric-value" data-summary="stageRowCount">0</strong>
+        </div>
+        <div class="metric-card">
+          <span class="metric-label">Project Types</span>
+          <strong class="metric-value" data-summary="projectTypeCount">0</strong>
+        </div>
+        <div class="metric-card">
+          <span class="metric-label">Needs Review</span>
+          <strong class="metric-value" data-summary="reviewCount">0</strong>
+        </div>
+      </aside>
+    </header>
+
+    <main>
+      <section class="panel panel-overview" id="overview">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Operating Model</p>
+            <h2>MVP shape</h2>
+          </div>
+          <p class="panel-note">Sales suggests. Ops reviews. Only approved changes publish.</p>
+        </div>
+        <div class="overview-grid">
+          <article class="overview-card">
+            <h3>Sales mode</h3>
+            <p>Search by project, stage, or dataset, then submit client-usage feedback and suggested changes.</p>
+          </article>
+          <article class="overview-card">
+            <h3>Ops mode</h3>
+            <p>Review low-confidence catalogue matches, proposed additions, and Sales submissions in one queue.</p>
+          </article>
+          <article class="overview-card">
+            <h3>Catalogue imports</h3>
+            <p>New supplier rows land as raw records, are normalized, matched, scored, and only then reviewed.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel" id="explorer">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Search & Filters</p>
+            <h2>Dataset explorer</h2>
+          </div>
+          <p class="panel-note">This is powered by generated JSON now and maps directly to the planned `asset` and `stage_asset_requirement` tables.</p>
+        </div>
+
+        <div class="filter-bar">
+          <label>
+            <span>Search</span>
+            <input id="searchInput" type="search" placeholder="Search datasets, product family, or supplier">
+          </label>
+          <label>
+            <span>Project type</span>
+            <select id="projectFilter">
+              <option value="">All</option>
+            </select>
+          </label>
+          <label>
+            <span>Stage</span>
+            <select id="stageFilter">
+              <option value="">All</option>
+            </select>
+          </label>
+          <label>
+            <span>Match status</span>
+            <select id="statusFilter">
+              <option value="">All</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="results-layout">
+          <div class="results-panel">
+            <div class="results-head">
+              <strong data-results-count>0 results</strong>
+            </div>
+            <div id="datasetList" class="dataset-list"></div>
+          </div>
+          <aside id="datasetDetail" class="detail-panel">
+            <div class="detail-empty">
+              <p>Select a dataset to view lifecycle usage, match status, and supplier context.</p>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="panel" id="ops">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Data/Product Ops</p>
+            <h2>Review queue preview</h2>
+          </div>
+          <p class="panel-note">The live version will be backed by `review_queue`, `asset_reconciliation`, and `client_usage_submission`.</p>
+        </div>
+        <div class="queue-grid" id="queueList"></div>
+      </section>
+
+      <section class="panel" id="next-steps">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Implementation Notes</p>
+            <h2>What is wired today</h2>
+          </div>
+        </div>
+        <ul class="note-list">
+          <li>Static frontend suitable for GitHub Pages.</li>
+          <li>Workbook export script generates the JSON used by this UI.</li>
+          <li>SQL files define the `data_lifecycles_mvp` schema and baseline tables for Supabase/Postgres.</li>
+          <li>When network access to Supabase is available, the schema and data importer can be applied without changing the UI model.</li>
+        </ul>
+      </section>
+    </main>
+  </div>
+
+  <script src="./assets/app.js" type="module"></script>
+</body>
+</html>
