@@ -1,0 +1,90 @@
+[
+  {
+    "id": "proposal-001",
+    "proposedName": "Aviation safeguarding and radar conflicts",
+    "commonName": "Aviation & Radar Constraints",
+    "requestedBy": "sales",
+    "proposalStatus": "pending-review",
+    "catalogueStatus": "desired",
+    "productStatus": "candidate-product",
+    "dataFamily": "Aviation Constraints",
+    "supplier": "NATS",
+    "coverage": "United Kingdom",
+    "lifecycleStageIds": ["onshore-feasibility", "onshore-approvals"],
+    "roleByStage": {
+      "onshore-feasibility": "analytical",
+      "onshore-approvals": "analytical"
+    },
+    "confidenceLevel": "high",
+    "clientSpecific": false,
+    "approvalStateNote": "Requested repeatedly for onshore wind client conversations.",
+    "projectTypeIds": ["onshore-wind"],
+    "summary": "Needed to answer radar and aviation conflict questions during wind project screening."
+  },
+  {
+    "id": "proposal-002",
+    "proposedName": "Marine bathymetry and seabed terrain",
+    "commonName": "Seabed Bathymetry",
+    "requestedBy": "product",
+    "proposalStatus": "approved",
+    "catalogueStatus": "candidate",
+    "productStatus": "candidate-product",
+    "dataFamily": "Bathymetry",
+    "supplier": "EMODnet",
+    "coverage": "North Sea & UK Waters",
+    "lifecycleStageIds": ["offshore-feasibility", "offshore-design"],
+    "roleByStage": {
+      "offshore-feasibility": "analytical",
+      "offshore-design": "analytical"
+    },
+    "confidenceLevel": "high",
+    "clientSpecific": false,
+    "approvalStateNote": "Ready to progress into governed intake once supplier route is confirmed.",
+    "projectTypeIds": ["offshore-wind"],
+    "summary": "Important for offshore site screening and engineering definition."
+  },
+  {
+    "id": "proposal-003",
+    "proposedName": "Utility asset and conflict mapping",
+    "commonName": "Utility Asset Maps",
+    "requestedBy": "sme",
+    "proposalStatus": "pending-review",
+    "catalogueStatus": "desired",
+    "productStatus": "candidate-product",
+    "dataFamily": "Infrastructure",
+    "supplier": "Line Search Before U Dig",
+    "coverage": "United Kingdom",
+    "lifecycleStageIds": ["housing-detailed-design", "fibre-survey", "fibre-build"],
+    "roleByStage": {
+      "housing-detailed-design": "analytical",
+      "fibre-survey": "analytical",
+      "fibre-build": "analytical"
+    },
+    "confidenceLevel": "high",
+    "clientSpecific": false,
+    "approvalStateNote": "High-value cross-sector candidate with strong delivery impact.",
+    "projectTypeIds": ["housing", "fibre"],
+    "summary": "Useful across design and delivery phases to reduce service clash risk."
+  },
+  {
+    "id": "proposal-004",
+    "proposedName": "Client duct utilisation intelligence",
+    "commonName": "Duct Capacity Index",
+    "requestedBy": "client",
+    "proposalStatus": "draft",
+    "catalogueStatus": "candidate",
+    "productStatus": "not-a-product",
+    "dataFamily": "Telecoms Infrastructure",
+    "supplier": "Client proprietary",
+    "coverage": "Selected authority areas",
+    "lifecycleStageIds": ["fibre-hld"],
+    "roleByStage": {
+      "fibre-hld": "analytical"
+    },
+    "confidenceLevel": "low",
+    "clientSpecific": true,
+    "approvalStateNote": "Must remain hidden from normal users unless explicitly approved for admin-only handling.",
+    "projectTypeIds": ["fibre"],
+    "summary": "Client-only request for route reuse modelling."
+  }
+]

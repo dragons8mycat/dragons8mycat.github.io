@@ -1,58 +1,159 @@
 # Data Lifecycles MVP
 
-This folder contains the first MVP scaffold for moving the workbook-based data lifecycle model into a web application.
+## Product purpose
 
-## What is here
+This MVP turns the geospatial lifecycle workbook and demo HTML into a maintainable web application for sales, product, catalogue, and admin teams.
 
-- `index.html`
-  Stage-first Sales and Leadership experience.
-- `admin.html`
-  Separate admin page for dataset-level stewardship and workbook-style maintenance.
-- `assets/`
-  CSS and browser-side JavaScript for the stage view and admin view.
-- `data/mvp-data.json`
-  Generated workbook export consumed by the static UI.
-- `scripts/export_workbook_to_json.py`
-  Exports the current master workbook into the JSON shape used by the frontend.
-- `scripts/load_workbook_to_postgres.py`
-  Loads the workbook snapshot into the `data_lifecycles_mvp` schema using `psql`.
-- `sql/001_schema.sql`
-  Baseline Postgres schema for Supabase in `data_lifecycles_mvp`.
-- `sql/002_views.sql`
-  First derived view for gap-oriented exploration.
+It helps users answer:
 
-## Local refresh
+- what data is used at a given lifecycle stage
+- how that data is used
+- where gaps or desired datasets exist
+- how proposed additions should be reviewed and curated
 
-Run:
+Client-specific records are excluded from normal user-facing flows by default and only appear to administrators in the mock role mode.
 
-```powershell
-python scripts/export_workbook_to_json.py
+## Core users
+
+- `Sales users`
+  Need fast answers by project type and lifecycle stage while speaking to clients.
+- `Product users`
+  Need to identify high-value gaps and repeated demand signals.
+- `Data catalogue users`
+  Need to browse the governed non-client catalogue and understand lifecycle usage.
+- `Data admin users`
+  Need to curate proposals, role classifications, status, and lifecycle use.
+
+## Main workflows
+
+### 1. Sales Stage Finder
+
+- filter by project type and lifecycle stage
+- switch between:
+  - `Role-led stage view`
+  - `Lifecycle touchpoint view`
+- keep unknown or weakly classified records separated from the strongest sales answers
+
+### 2. Catalogue Explorer
+
+- search and filter the governed non-client catalogue
+- inspect dataset metadata, status, supplier, coverage, and lifecycle usage
+- open a dataset detail drawer
+
+### 3. Gaps & Prioritisation
+
+- view desired or gap datasets separately
+- review prioritisation scores based on lifecycle breadth, project-type spread, product/catalogue existence, request signal, and confidence
+- compare desired datasets across project types
+
+### 4. Admin & Curation
+
+- review a mock curation queue
+- edit proposal fields using local state
+- manage lifecycle stage role assignments and approval state
+
+## Tech stack
+
+- `React`
+- `TypeScript`
+- `Vite`
+- `Tailwind CSS`
+- `React Router`
+- `TanStack Table`
+- `Zod`
+- local JSON fixtures
+
+## Project structure
+
+```text
+src/
+  app/
+  components/
+  data/
+    fixtures/
+  features/
+    admin/
+    catalogue/
+    gaps/
+    sales-stage-finder/
+  lib/
+  types/
 ```
 
-Then open:
+## Data model overview
 
-`index.html`
+The typed model includes:
 
-For local preview, serve the folder instead of opening the file directly:
+- `Dataset`
+- `ProjectType`
+- `LifecycleStage`
+- `DatasetLifecycleUse`
+- `DatasetRole`
+- `DatasetStatus`
+- `DataProposal`
+- `ProposalStatus`
+- `UserRole`
+
+Fixtures are validated through Zod before they are exposed to the app.
+
+## Running locally
+
+### Requirements
+
+- Node.js with npm available
+
+### Install
 
 ```powershell
-cd D:\Management\Github\dragons8mycat.github.io\lifecycle_mvp
-python -m http.server 8000
+npm install
 ```
 
-Then browse to:
-
-`http://localhost:8000`
-
-## Database load
-
-From an environment that can reach Supabase:
+### Start dev server
 
 ```powershell
-$env:PGPASSWORD = "your-db-password"
-python scripts/load_workbook_to_postgres.py
+npm run dev
 ```
 
-## Current constraint
+### Build
 
-Direct Supabase database connectivity from this shell is blocked because the current environment cannot route to the resolved IPv6 database host. The schema files are ready to apply once run from a network-capable environment.
+```powershell
+npm run build
+```
+
+### Lint
+
+```powershell
+npm run lint
+```
+
+### Preview production build
+
+```powershell
+npm run preview
+```
+
+## Fixture data notes
+
+The fixture data is deliberately rich enough to demonstrate:
+
+- multiple project types: Housing, Solar, Onshore Wind, Offshore Wind, Fibre
+- governed catalogue datasets
+- desired or gap datasets
+- product and SME-input examples
+- at least one unknown or weakly classified dataset
+- at least one client-specific dataset hidden from non-admin users
+
+## Future backend / API notes
+
+The current app uses a local fixture repository and transformation helpers in `src/lib/`.
+
+To move to a real API later:
+
+- replace `src/data/repository.ts` with API-backed services
+- keep the existing types and Zod schemas as the contract boundary
+- move admin mutations from local state to API calls
+- layer authentication and permission checks on top of the existing mock role model
+
+## Current status
+
+This MVP is designed for internal stakeholder review and has a clean lint/build path with local fixture data.
