@@ -140,7 +140,7 @@ The deployable static output is written to:
 
 The root [index.html](D:/Management/Github/dragons8mycat.github.io/lifecycle_mvp/index.html) and [app.html](D:/Management/Github/dragons8mycat.github.io/lifecycle_mvp/app.html) both redirect to the built app at:
 
-`./web/app.html`
+`./web/vite-entry.html`
 
 The Vite source entry is kept in [vite-entry.html](D:/Management/Github/dragons8mycat.github.io/lifecycle_mvp/vite-entry.html), which avoids the blank-page problem caused by serving a source HTML file that references `/src/main.tsx` directly.
 
