@@ -15,7 +15,7 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        app: resolve(__dirname, "app.html"),
+        app: resolve(__dirname, "vite-entry.html"),
       },
     },
   },
