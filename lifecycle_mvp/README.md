@@ -132,6 +132,18 @@ npm run lint
 npm run preview
 ```
 
+### Static hosting / GitHub Pages
+
+The deployable static output is written to:
+
+`web/`
+
+The root [index.html](D:/Management/Github/dragons8mycat.github.io/lifecycle_mvp/index.html) redirects to the built app at:
+
+`./web/app.html`
+
+This keeps the source entry (`app.html`) separate from the deployable static site and avoids the blank-page problem caused by trying to serve `/src/main.tsx` directly.
+
 ## Fixture data notes
 
 The fixture data is deliberately rich enough to demonstrate:
