@@ -1,38 +1,44 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { MockSessionProvider, useMockSession } from "@/app/MockSessionContext";
 import { Nav } from "@/components/Nav";
 
 function ShellInner() {
-  const { role, setRole } = useMockSession();
+  const { role } = useMockSession();
+  const location = useLocation();
+  const routeLabel =
+    {
+      "/": "Overview",
+      "/sales": "Sales",
+      "/data": "Data",
+      "/leadership": "Leadership",
+      "/admin": "Admin",
+    }[location.pathname] ?? "Workspace";
+  const roleLabel =
+    {
+      sales: "Sales user",
+      product: "Leadership / product user",
+      catalogue: "Data user",
+      admin: "Admin user",
+    }[role];
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <header className="border-b border-slate-200 bg-gradient-to-r from-brand-navy to-brand-blue text-white">
-        <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-6 lg:px-8">
+      <header className="border-b border-slate-200 bg-white/95 backdrop-blur">
+        <div className="mx-auto flex max-w-7xl flex-col gap-5 px-4 py-5 lg:px-8">
           <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-center">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.22em] text-sky-200">Idox Geospatial</p>
-              <h1 className="mt-2 max-w-4xl text-3xl font-extrabold tracking-tight md:text-4xl">
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-brand-blue">Idox Geospatial</p>
+              <h1 className="mt-2 text-2xl font-extrabold tracking-tight text-brand-heading md:text-3xl">
                 Data Lifecycles MVP
               </h1>
-              <p className="mt-3 max-w-4xl text-sm leading-6 text-sky-50/90 md:text-base">
-                A governed lifecycle catalogue for understanding which geospatial datasets matter at each stage,
-                where the gaps are, and how new proposals should be curated.
+              <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600 md:text-base">
+                Governed lifecycle insight for sales, data, and leadership teams.
               </p>
             </div>
-            <div className="w-full max-w-xs rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur">
-              <label className="field-label mb-2 text-sky-50">Mock user role</label>
-              <select
-                value={role}
-                onChange={(event) => setRole(event.target.value as typeof role)}
-                className="field-input border-white/20 bg-white/10 text-white focus:border-white focus:ring-white/20"
-              >
-                <option value="sales">Sales user</option>
-                <option value="product">Product user</option>
-                <option value="catalogue">Data catalogue user</option>
-                <option value="admin">Data admin user</option>
-              </select>
-              <p className="mt-2 text-xs text-sky-100/80">Used to demonstrate permission-aware client-specific filtering.</p>
+            <div className="flex flex-col items-start gap-2 rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">
+              <span className="text-xs font-bold uppercase tracking-[0.18em] text-slate-500">Current view</span>
+              <span className="font-semibold text-brand-heading">{routeLabel}</span>
+              <span>{roleLabel}</span>
             </div>
           </div>
           <Nav />

@@ -17,14 +17,14 @@ export function LifecycleStageSelector({
           type="button"
           onClick={() => onSelect(stage.id)}
           className={[
-            "min-w-52 rounded-2xl border p-4 text-left transition",
+            "min-w-48 rounded-2xl border p-4 text-left transition",
             selectedStageId === stage.id
               ? "border-brand-orange bg-orange-50 shadow-sm"
               : "border-slate-200 bg-white hover:border-brand-sky",
           ].join(" ")}
         >
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">Stage {stage.sequence}</p>
-          <p className="mt-2 text-base font-bold text-brand-heading">{stage.name}</p>
+          <p className="mt-2 text-sm font-bold text-brand-heading sm:text-base">{stage.name}</p>
         </button>
       ))}
     </div>

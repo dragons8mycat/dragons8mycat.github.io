@@ -1,10 +1,11 @@
 import { NavLink } from "react-router-dom";
 
 const links = [
-  { to: "/", label: "Sales Stage Finder" },
-  { to: "/catalogue", label: "Catalogue Explorer" },
-  { to: "/gaps", label: "Gaps & Prioritisation" },
-  { to: "/admin", label: "Admin & Curation" },
+  { to: "/", label: "Overview" },
+  { to: "/sales", label: "Sales" },
+  { to: "/data", label: "Data" },
+  { to: "/leadership", label: "Leadership" },
+  { to: "/admin", label: "Admin" },
 ];
 
 export function Nav() {
@@ -20,7 +21,7 @@ export function Nav() {
               "rounded-full border px-4 py-2 text-sm font-semibold transition",
               isActive
                 ? "border-brand-blue bg-brand-blue text-white"
-                : "border-slate-300 bg-white text-brand-heading hover:border-brand-sky hover:text-brand-blue",
+                : "border-slate-300 bg-white/90 text-brand-heading hover:border-brand-sky hover:text-brand-blue",
             ].join(" ")
           }
         >

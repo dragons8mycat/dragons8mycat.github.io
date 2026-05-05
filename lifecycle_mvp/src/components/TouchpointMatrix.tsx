@@ -21,8 +21,8 @@ export function TouchpointMatrix({
             <p className="eyebrow">Lifecycle touchpoint view</p>
             <h3 className="text-xl font-extrabold text-brand-heading">Comparative matrix</h3>
             <p className="mt-2 max-w-3xl text-sm text-slate-600">
-              This mirrors the workbook gap-sheet logic: datasets down the left, lifecycle stages across the top,
-              with role markers in the cells.
+              Datasets are listed on the left, stages run across the top, and each used touchpoint is marked by its
+              primary role.
             </p>
           </div>
           <div className="flex flex-wrap gap-2 text-xs font-semibold text-slate-600">
@@ -33,6 +33,7 @@ export function TouchpointMatrix({
           </div>
         </div>
       </div>
+
       <div className="overflow-x-auto">
         <table className="min-w-[980px] w-full border-collapse text-sm">
           <thead>
@@ -73,7 +74,7 @@ export function TouchpointMatrix({
                   if (!use) {
                     return (
                       <td key={stage.id} className="px-4 py-4 text-center text-slate-300">
-                        –
+                        —
                       </td>
                     );
                   }

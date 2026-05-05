@@ -50,11 +50,11 @@ export function GapsPrioritisationPage() {
       <section className="panel p-6">
         <div className="panel-header">
           <div>
-            <p className="eyebrow">Gaps & Prioritisation</p>
-            <h2 className="text-2xl font-extrabold text-brand-heading">Prioritise desired datasets and strategic gaps</h2>
+            <p className="eyebrow">Leadership</p>
+            <h2 className="text-2xl font-extrabold text-brand-heading">Strategic gaps and prioritisation</h2>
             <p className="mt-2 max-w-4xl text-sm text-slate-600">
-              Scores consider lifecycle stage breadth, project type impact, catalogue/product availability, request
-              signal, and confidence.
+              Use this view to identify the highest-value missing datasets, compare how widely they affect project
+              lifecycles, and focus product development where the demand is strongest.
             </p>
           </div>
         </div>
@@ -99,7 +99,7 @@ export function GapsPrioritisationPage() {
                             <span>{uses.map((use) => use.lifecycleStageId.split("-").slice(1).join(" ")).slice(0, 2).join(", ")}</span>
                           </div>
                         ) : (
-                          <span className="text-slate-300">–</span>
+                          <span className="text-slate-300">—</span>
                         )}
                       </td>
                     );
